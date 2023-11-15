@@ -1,11 +1,14 @@
 #include "dialog.h"
 #include "ui_dialog.h"
 #include "QPixmap"
+#include <QTimer>
 
 void Dialog::connected(){
   ui->list->addItem("Conectado");
-   cliente.subscribe("/TP/cmd");
-   cliente.subscribe("/TP/"+ui->le_ID->text()+"/cmd");
+   cliente.subscribe("/ej02/cmd");
+   cliente.subscribe("/ej02/"+ui->le_ID->text()+"/cmd");
+     ui->label_6->setText("Apagado");
+     ui->LedImageLabel->setPixmap(QPixmap(":/led_apagado.jpg"));
 }
 void Dialog::disconnected(){
   ui->list->addItem("Desconectado");
@@ -28,17 +31,19 @@ void Dialog::pingresp(){
 void Dialog::received(const Message &message){
   Message msg;
 
-  if(message.topic() == "/TP/cmd"){
+  if(message.topic() == "/ej02/cmd"){
       QMQTT :: Message mensID;
-      mensID.setTopic( "/TP/id");
+      mensID.setTopic( "/ej02/id");
       mensID.setPayload(ui->le_ID->text().toLatin1());
       cliente.publish(mensID);
    }
-  if(message.topic()=="/TP/"+ui->le_ID->text()+"/cmd"){
-      if(QString(message.payload()) == "LedOn" ){
-        ui->LedImageLabel->setPixmap(QPixmap("C:/Users/dgent/OneDrive/Escritorio"));
+  if(message.topic()=="/ej02/"+ui->le_ID->text()+"/cmd"){
+      if(QString(message.payload()) == "ledon" ){
+        ui->LedImageLabel->setPixmap(QPixmap(":/utn.png"));
+        ui->label_6->setText("Prendido");
       }else{
-         ui->LedImageLabel->setPixmap(QPixmap("C:/Users/dgent/OneDrive/Escritorio"));
+         ui->LedImageLabel->setPixmap(QPixmap(":/led_apagado.jpg"));
+         ui->label_6->setText("Apagado");
   }}
 
 
@@ -63,6 +68,9 @@ Dialog::Dialog(QWidget *parent)
     connect(&cliente, SIGNAL(published(const QMQTT::Message&, quint16 )), this, SLOT(published(const QMQTT::Message&, quint16 )));
     connect(&cliente, SIGNAL(pingresp()), this, SLOT(pingresp()));
     connect(&cliente, SIGNAL(received(const QMQTT::Message&)), this, SLOT(received(const QMQTT::Message&)));
+    timer = new QTimer(this);
+        connect(timer, SIGNAL(timeout()), this, SLOT(on_timer_timeout()));
+        timer->start(5000); // El timer emitirá la señal timeout cada 5 segundos
 
 
 
@@ -75,13 +83,20 @@ Dialog::~Dialog()
 
 void Dialog::on_dial_valueChanged(int value)
 {
-    QMQTT::Message msg;
-     msg.setTopic("/PRUEBA/TOPICO");
-     msg.setPayload(QString :: number(value).toLatin1());
-     cliente.publish(msg);
+    lastDialValue = value; // Guardamos el último valor del dial
+       publishDialValue(value); // Publicamos el valor del dial
 }
-
-
+void Dialog::on_timer_timeout()
+{
+    publishDialValue(lastDialValue); // Publicamos el último valor del dial
+}
+void Dialog::publishDialValue(int value)
+{
+    QMQTT::Message msg;
+    msg.setTopic("/ej02/sensor");
+    msg.setPayload(QString :: number(value).toLatin1());
+    cliente.publish(msg);
+}
 void Dialog::on_btn_Desconectar_clicked()
 {
     if(cliente.isConnectedToHost()){
@@ -100,4 +115,16 @@ void Dialog::on_btnConnect_clicked()
       }
     cliente.setPort(ui->le_puerto->text().toInt());
     cliente.connectToHost();
+}
+
+
+
+void Dialog::on_LedImageLabel_linkActivated(const QString &link)
+{
+
+}
+
+void Dialog::on_dial_actionTriggered(int action)
+{
+
 }
