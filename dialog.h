@@ -1,6 +1,7 @@
 #ifndef DIALOG_H
 #define DIALOG_H
 #include <qmqtt.h>
+#include <QTimer>
 
 #include <QDialog>
 
@@ -21,7 +22,8 @@ public:
     ~Dialog();
 
 private slots:
-
+void publishDialValue(int value);
+void on_timer_timeout();
    void connected();
    void disconnected();
    void error(const QMQTT ::  ClientError);
@@ -39,7 +41,13 @@ private slots:
 
     void on_dial_actionTriggered(int action);
 
+    void on_LedImageLabel_linkActivated(const QString &link);
+
 private:
     Ui::Dialog *ui;
+    QTimer *timer;
+    int lastDialValue;
+
+
 };
 #endif // DIALOG_H
