@@ -181,7 +181,7 @@
     <item>
      <widget class="QLineEdit" name="le_clave">
       <property name="text">
-       <string>lucas1234</string>
+       <string>esp32esp32</string>
       </property>
      </widget>
     </item>
@@ -215,7 +215,7 @@
     <item>
      <widget class="QLineEdit" name="le_usuario">
       <property name="text">
-       <string>TP2INFO2</string>
+       <string>esp32</string>
       </property>
       <property name="readOnly">
        <bool>false</bool>
@@ -257,7 +257,7 @@
     <item>
      <widget class="QLineEdit" name="le_serv">
       <property name="text">
-       <string>127.0.0.4</string>
+       <string>192.168.0.141</string>
       </property>
       <property name="readOnly">
        <bool>false</bool>
@@ -324,10 +324,29 @@
   <widget class="QLabel" name="LedImageLabel">
    <property name="geometry">
     <rect>
-     <x>250</x>
+     <x>270</x>
      <y>30</y>
-     <width>111</width>
+     <width>101</width>
      <height>101</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+   <property name="pixmap">
+    <pixmap>led_apagado.jpg</pixmap>
+   </property>
+   <property name="scaledContents">
+    <bool>true</bool>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_6">
+   <property name="geometry">
+    <rect>
+     <x>380</x>
+     <y>160</y>
+     <width>71</width>
+     <height>21</height>
     </rect>
    </property>
    <property name="text">
@@ -335,6 +354,19 @@
    </property>
    <property name="scaledContents">
     <bool>true</bool>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_7">
+   <property name="geometry">
+    <rect>
+     <x>290</x>
+     <y>155</y>
+     <width>71</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Estado</string>
    </property>
   </widget>
  </widget>
